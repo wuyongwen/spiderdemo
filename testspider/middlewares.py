@@ -4,7 +4,9 @@
 #
 # See documentation in:
 # https://doc.scrapy.org/en/latest/topics/spider-middleware.html
+import logging
 
+import requests
 from scrapy import signals
 
 
@@ -101,3 +103,39 @@ class TestspiderDownloaderMiddleware(object):
 
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
+
+log = logging.getLogger()
+class ProxyMiddleWare(object):
+    """docstring for ProxyMiddleWare"""
+    proxy_server = "http://flow.wmlives.com"
+    def process_request(self, request, spider):
+        '''对request对象加上proxy'''
+        # proxy = self.get_random_proxy()
+        proxy = "http://127.0.0.1:8087"
+        log.info("this is response ip:" + proxy)
+        request.meta['proxy'] = proxy
+
+    def process_response(self, request, response, spider):
+        '''对返回的response处理'''
+        # 如果返回的response状态不是200，重新生成当前request对象
+        if response.status != 200:
+            #oproxy = request.meta['proxy']
+            #if oproxy:
+                #flag = self.delete_proxy(oproxy[7:])
+                #log.info("delete proxy %s %s", oproxy, flag)
+            proxy = "http://127.0.0.1:8087"
+            log.info("this is response ip:" + proxy)
+            # 对当前reque加上代理
+            request.meta['proxy'] = proxy
+            return request
+        return response
+
+    def get_random_proxy(self):
+        proxy = requests.get("{}/get/".format(self.proxy_server)).content
+        if proxy:
+            proxy = "http://%s" % proxy
+        return proxy
+
+    def delete_proxy(self, proxy):
+        if proxy:
+            return requests.get("{}/delete/?proxy={}".format(self.proxy_server, proxy)).content

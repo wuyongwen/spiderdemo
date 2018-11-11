@@ -93,5 +93,12 @@ FEED_EXPORT_ENCODING = 'utf-8'
 ITEM_PIPELINES = {
     'testspider.pipelines.Pipeline_ToCSV': 100,
 }
+DOWNLOADER_MIDDLEWARES = {
+     'scrapy.contrib.downloadermiddleware.httpproxy.HttpProxyMiddleware': None,
+     # 'testspider.middlewares.ProxyMiddleWare': 125,
+     'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware': None
+}
+
 DOWNLOAD_DELAY = 2.5
 COOKIES_ENABLED = False
+CONCURRENT_REQUESTS = 100

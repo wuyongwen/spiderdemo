@@ -13,7 +13,7 @@ from scrapy.cmdline import execute
 
 
 def main():
-    execute(['scrapy', 'crawl', 'xiecheng'])
+    execute(['scrapy', 'crawl', 'quna'])
 
 
 if __name__ == '__main__':
